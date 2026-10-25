@@ -35,11 +35,11 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
           wpnuxt: hasNuxtModule('@wpnuxt/core', nuxt),
           deployedAt: options.deployedAt ? new Date() : undefined
         })
-        return `import { defineNitroPlugin } from 'nitropack/runtime'
-const html = ${JSON.stringify(html)}
-export default defineNitroPlugin((nitroApp) => {
+        // A plain function instead of defineNitroPlugin: nitropack is not resolvable from the app under strict pnpm
+        return `const html = ${JSON.stringify(html)}
+export default (nitroApp) => {
   nitroApp.hooks.hook('render:html', (ctx) => { ctx.bodyAppend.push(html) })
-})`
+}`
       }
     })
     // Appended after the app root, so it never takes part in hydration
