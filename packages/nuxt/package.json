@@ -9,6 +9,11 @@
   ],
   "license": "MIT",
   "author": "Wouter Vernaillen <wouter@vernaillen.com> (https://vernaillen.dev)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vernaillen/vernaillen-footer.git",
+    "directory": "packages/nuxt"
+  },
   "type": "module",
   "exports": {
     ".": {
@@ -23,11 +28,10 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "build": "nuxt-module-build build",
-    "prepare": "nuxt-module-build build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxi prepare playground"

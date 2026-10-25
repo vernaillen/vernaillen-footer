@@ -10,6 +10,11 @@
   ],
   "license": "MIT",
   "author": "Wouter Vernaillen <wouter@vernaillen.com> (https://vernaillen.dev)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vernaillen/vernaillen-footer.git",
+    "directory": "packages/astro"
+  },
   "type": "module",
   "exports": {
     ".": {
@@ -24,11 +29,10 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "build": "unbuild",
-    "prepare": "unbuild",
     "dev": "astro dev --root playground",
     "dev:build": "astro build --root playground"
   },
