@@ -1,0 +1,46 @@
+{
+  "name": "@vernaillen/nuxt-footer",
+  "version": "0.1.0",
+  "description": "Nuxt module that adds a thin 'created & maintained by' footer to every page",
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "footer"
+  ],
+  "license": "MIT",
+  "author": "Wouter Vernaillen <wouter@vernaillen.com> (https://vernaillen.dev)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs",
+      "default": "./dist/module.mjs"
+    }
+  },
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "nuxt-module-build build",
+    "prepare": "nuxt-module-build build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxi prepare playground"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^4.6.2"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^1.0.3",
+    "@nuxt/schema": "^4.6.2",
+    "nuxt": "^4.6.2"
+  },
+  "peerDependencies": {
+    "nuxt": "^4.0.0"
+  }
+}

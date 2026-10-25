@@ -1,0 +1,42 @@
+{
+  "name": "@vernaillen/astro-footer",
+  "version": "0.1.0",
+  "description": "Astro integration that adds a thin 'created & maintained by' footer to every page",
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "withastro",
+    "footer"
+  ],
+  "license": "MIT",
+  "author": "Wouter Vernaillen <wouter@vernaillen.com> (https://vernaillen.dev)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "unbuild",
+    "prepare": "unbuild",
+    "dev": "astro dev --root playground",
+    "dev:build": "astro build --root playground"
+  },
+  "devDependencies": {
+    "astro": "^7.4.2",
+    "unbuild": "^3.6.1"
+  },
+  "peerDependencies": {
+    "astro": "^7.0.0"
+  }
+}
