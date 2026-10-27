@@ -11,14 +11,41 @@ The footer is added to the server-rendered HTML (also when prerendering), right 
 
 ## Installing
 
-The packages are private, on GitHub Packages. Every site needs this `.npmrc`:
+The packages are private, on GitHub Packages. Every site needs this in its `.npmrc`:
 
 ```ini
 @vernaillen:registry=https://npm.pkg.github.com
+```
+
+The token goes in the **user-level** `~/.npmrc`, never in the site's: pnpm 12 ignores credentials in a repository's `.npmrc`, and on Linux it also ignores them as an `npm_config_` environment variable. Locally:
+
+```ini
 //npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}
 ```
 
-`GITHUB_PACKAGES_TOKEN` is a classic personal access token with only the `read:packages` scope. Set it in your shell profile, and as an environment variable wherever the site builds (Vercel, Coolify, Docker build secret).
+`GITHUB_PACKAGES_TOKEN` is a classic personal access token with only the `read:packages` scope, exported in your shell profile.
+
+In GitHub Actions, store it as the repository secret `PACKAGES_TOKEN` (secret names can't start with `GITHUB_`) and write it to the runner's `~/.npmrc` before installing:
+
+```yaml
+- name: Install dependencies
+  env:
+    PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+  run: |
+    echo "//npm.pkg.github.com/:_authToken=${PACKAGES_TOKEN}" >> ~/.npmrc
+    pnpm install --frozen-lockfile
+```
+
+In a Docker build, pass it as a BuildKit secret (`github_packages_token=${{ secrets.PACKAGES_TOKEN }}`) and write it to `~/.npmrc` in the install step only, so it never lands in a layer:
+
+```dockerfile
+RUN --mount=type=secret,id=github_packages_token,env=GITHUB_PACKAGES_TOKEN,required=true \
+    echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > /root/.npmrc \
+    && pnpm install --frozen-lockfile \
+    && rm /root/.npmrc
+```
+
+Sites using `vernaillen/workflows` get the Actions part from the shared pipeline; the Docker secret goes in `BUILD_SECRETS`.
 
 ### Nuxt
 
