@@ -72,6 +72,6 @@ The footer markup lives in `shared/render.ts` and is bundled into both packages.
 ## Releasing
 
 1. Bump `version` in the `package.json` of each package that changed.
-2. Commit, then tag and push: `git tag v0.2.0 && git push --follow-tags`.
+2. Commit, then tag and push: `git tag -a v0.2.0 -m v0.2.0 && git push --follow-tags`.
 
 The release workflow publishes every package whose version is not in the registry yet.
