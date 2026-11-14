@@ -8,6 +8,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # npmjs.com only accepts a publish from this environment
+    environment: production
     permissions:
       contents: read
       # npm trusted publishing: the job proves its identity to npmjs.com with OIDC, so there is no token to store
