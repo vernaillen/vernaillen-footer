@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      # npm trusted publishing: the job proves its identity to npmjs.com with OIDC, so there is no token to store
+      id-token: write
     steps:
       - uses: actions/checkout@v6
       - run: corepack enable
@@ -18,14 +19,22 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          registry-url: https://npm.pkg.github.com
-          scope: '@vernaillen'
+          registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
-      # Skips packages whose version is already in the registry, so bump the version of whatever changed before tagging
-      - run: pnpm -r publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Skips packages whose version is already in the registry, so bump the version of whatever changed before tagging.
+      # Published with npm, not pnpm: trusted publishing is a feature of the npm CLI
+      - name: Publish
+        run: |
+          for dir in packages/*; do
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            if npm view "$name@$version" version > /dev/null 2>&1; then
+              echo "$name@$version is already published, skipping"
+            else
+              npm publish "./$dir"
+            fi
+          done

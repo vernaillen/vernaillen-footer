@@ -11,41 +11,7 @@ The footer is added to the server-rendered HTML (also when prerendering), right 
 
 ## Installing
 
-The packages are private, on GitHub Packages. Every site needs this in its `.npmrc`:
-
-```ini
-@vernaillen:registry=https://npm.pkg.github.com
-```
-
-The token goes in the **user-level** `~/.npmrc`, never in the site's: pnpm 12 ignores credentials in a repository's `.npmrc`, and on Linux it also ignores them as an `npm_config_` environment variable. Locally:
-
-```ini
-//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}
-```
-
-`GITHUB_PACKAGES_TOKEN` is a classic personal access token with only the `read:packages` scope, exported in your shell profile.
-
-In GitHub Actions, store it as the repository secret `PACKAGES_TOKEN` (secret names can't start with `GITHUB_`) and write it to the runner's `~/.npmrc` before installing:
-
-```yaml
-- name: Install dependencies
-  env:
-    PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
-  run: |
-    echo "//npm.pkg.github.com/:_authToken=${PACKAGES_TOKEN}" >> ~/.npmrc
-    pnpm install --frozen-lockfile
-```
-
-In a Docker build, pass it as a BuildKit secret (`github_packages_token=${{ secrets.PACKAGES_TOKEN }}`) and write it to `~/.npmrc` in the install step only, so it never lands in a layer:
-
-```dockerfile
-RUN --mount=type=secret,id=github_packages_token,env=GITHUB_PACKAGES_TOKEN,required=true \
-    echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > /root/.npmrc \
-    && pnpm install --frozen-lockfile \
-    && rm /root/.npmrc
-```
-
-Sites using `vernaillen/workflows` get the Actions part from the shared pipeline; the Docker secret goes in `BUILD_SECRETS`.
+The packages are public on npmjs.com, so installing needs no token and no `.npmrc` entry.
 
 ### Nuxt
 
@@ -101,4 +67,4 @@ The footer markup lives in `shared/render.ts` and is bundled into both packages.
 1. Bump `version` in the `package.json` of each package that changed.
 2. Commit, then tag and push: `git tag -a v0.2.0 -m v0.2.0 && git push --follow-tags`.
 
-The release workflow publishes every package whose version is not in the registry yet.
+The release workflow publishes every package whose version is not on npmjs.com yet. It uses npm trusted publishing: each package lists this repository and `release.yml` as its trusted publisher on npmjs.com, so there is no publish token.
